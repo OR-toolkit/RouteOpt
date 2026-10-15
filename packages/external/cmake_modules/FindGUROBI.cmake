@@ -1,6 +1,6 @@
 # FindGUROBI.cmake
 
-set(GUROBI_ROOT "/Library/gurobi1300/macos_universal2")
+set(GUROBI_ROOT "/Library/gurobi1303/macos_universal2")
 
 if (EXISTS "${GUROBI_ROOT}")
     set(GUROBI_FOUND TRUE)
