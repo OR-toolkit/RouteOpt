@@ -3,6 +3,7 @@
 *.iml
 .idea
 .gitignore.swp
+*.vrp
 
 # Local experiment outputs
 /runs/
