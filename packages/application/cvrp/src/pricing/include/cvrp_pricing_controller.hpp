@@ -11,6 +11,7 @@
 #include "cvrp_macro.hpp"
 #include "label.hpp"
 #include "label_snapshot.hpp"
+#include "label_logger.hpp"
 #include "rank1_rc_controller.hpp"
 #include "rank1_data_shared.hpp"
 #include "bucket.hpp"
@@ -259,6 +260,13 @@ namespace RouteOpt::Application::CVRP {
             return aver_route_length;
         }
 
+        auto &refLabelLogger() {
+            return label_logger;
+        }
+
+        void configureLabelLog(const std::string &instance_name, const std::string &instance_path,
+                               int argc, char *argv[]);
+
         //
 
         void priceConstraints(const std::vector<Rcc> &rccs,
@@ -440,6 +448,39 @@ namespace RouteOpt::Application::CVRP {
         std::pair<double, double> outer_bin_len{};
         std::pair<double, double> outer_bin_but_keep_len{};
         std::map<std::vector<int>, double> seq_rc{};
+
+        //label log, read-only with respect to the search
+        LabelLogger label_logger{};
+        Label *label_pop_dominator{};
+
+        void beginLabelLogCall(PRICING_LEVEL pricing_level);
+
+        void abortLabelLogAttempt();
+
+        void endLabelLogCall(bool if_finished);
+
+        void finishLabelLogLabels(LabelOutcome outcome);
+
+        template<bool dir>
+        void beginLabelLogDirection();
+
+        template<bool dir>
+        void logInitialLabel(int slot, int vertex, int bj);
+
+        template<bool dir>
+        void logLabelCreated(Label *ki, int j, int bj, LabelArcKind arc_kind);
+
+        template<bool dir>
+        void logLabelRejected(Label *dominator);
+
+        template<bool dir>
+        void logLabelInserted(int j, int bj);
+
+        template<bool dir>
+        void logLabelRemoved(Label *kj, int j, int bj);
+
+        template<bool dir>
+        void logLabelPopped(Label *ki, int i, int b, bool if_suc);
 
         //enumeration
         template<bool if_symmetry>
@@ -653,6 +694,7 @@ namespace RouteOpt::Application::CVRP {
 #include "get_topological_order.hpp"
 #include "preprocess_arc_elimination.hpp"
 #include "pricing_functors.hpp"
+#include "label_logging.hpp"
 #include "run_labeling.hpp"
 #include "heuristic_labeling.hpp"
 #include "exact.hpp"

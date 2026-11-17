@@ -1,0 +1,13 @@
+{
+  "cmake.sourceDirectory": "${workspaceFolder}/packages/application/cvrp",
+  "cmake.buildDirectory": "${workspaceFolder}/packages/application/cvrp/build",
+  "cmake.generator": "Unix Makefiles",
+  "cmake.configureOnOpen": true,
+  "cmake.configureSettings": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+  },
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/packages/application/cvrp/build/compile_commands.json",
+  "C_Cpp.default.cppStandard": "c++20"
+}

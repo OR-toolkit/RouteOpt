@@ -576,6 +576,12 @@ namespace RouteOpt::Application::CVRP {
         if (!node->getIfTerminate() && !node->getIfInEnumState()) {
             node->cleanIndexColForNode();
         }
+        if constexpr (LABEL_LOG) {
+            if (node->getIfRootNode() && pricing_controller.refLabelLogger().ifStopAfterRoot()) {
+                pricing_controller.refLabelLogger().finishAfterRoot(node->getValue(), ub, node->getIfTerminate());
+                std::exit(0);
+            }
+        }
     }
 
     void VRPTW::addFeasibilityCuts(int &num_row,

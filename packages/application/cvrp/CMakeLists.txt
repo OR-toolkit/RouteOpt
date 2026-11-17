@@ -84,6 +84,20 @@ if (LABEL_ASSIGN_OVERRIDE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE LABEL_ASSIGN_OVERRIDE=${LABEL_ASSIGN_OVERRIDE})
 endif ()
 
+# Label log for dominance analysis: compiled out unless ON; the binary is named cvrp_label_log.
+option(ROUTEOPT_LABEL_LOG "Record every pricing label to binary files (runtime switch: ROUTEOPT_LABEL_LOG_DIR)" OFF)
+if (ROUTEOPT_LABEL_LOG)
+    execute_process(COMMAND git describe --always --dirty --abbrev=12
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            OUTPUT_VARIABLE ROUTEOPT_GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+    if (NOT ROUTEOPT_GIT_DESCRIBE)
+        set(ROUTEOPT_GIT_DESCRIBE unknown)
+    endif ()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE ROUTEOPT_LABEL_LOG
+            ROUTEOPT_GIT_DESCRIBE="${ROUTEOPT_GIT_DESCRIBE}" ROUTEOPT_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
+    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME cvrp_label_log)
+endif ()
+
 
 target_link_libraries(${PROJECT_NAME}
         PRIVATE

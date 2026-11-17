@@ -115,12 +115,14 @@ namespace RouteOpt::Application::CVRP {
 
         node->refBrCs().emplace_back(Brc{edge, b4_num_row, false});
         TestingDetail::addBranchConstraint(solver_ind, solver_val, node_solver);
+        if constexpr (LABEL_LOG) pricing_controller.refLabelLogger().setTesting(true);
         TestingDetail::callPricingInTesting<if_exact>(this, node, tmp_val);
         dif1 = TestingDetail::calculateDifference(tmp_val, org_val);
 
         node->refBrCs().back().br_dir = true;
         TestingDetail::inverseLastBranchConstraint(node_solver);
         TestingDetail::callPricingInTesting<if_exact>(this, node, tmp_val);
+        if constexpr (LABEL_LOG) pricing_controller.refLabelLogger().setTesting(false);
         dif2 = TestingDetail::calculateDifference(tmp_val, org_val);
 
         SAFE_SOLVER(node_solver.delConstraints(1, &b4_num_row))
@@ -149,7 +151,9 @@ namespace RouteOpt::Application::CVRP {
 
         node->refBrCs().emplace_back(Brc{edge, b4_num_row, dir});
         TestingDetail::addBranchConstraint(solver_ind, solver_val, node_solver, dir);
+        if constexpr (LABEL_LOG) pricing_controller.refLabelLogger().setTesting(true);
         TestingDetail::callPricingInTesting<if_exact>(this, node, tmp_val);
+        if constexpr (LABEL_LOG) pricing_controller.refLabelLogger().setTesting(false);
         dif1 = TestingDetail::calculateDifference(tmp_val, org_val);
 
         SAFE_SOLVER(node_solver.delConstraints(1, &b4_num_row))

@@ -30,6 +30,7 @@ namespace RouteOpt::Application::CVRP {
 
         bool if_suc;
         if constexpr (!if_last_half) {
+            if constexpr (LABEL_LOG) beginLabelLogDirection<dir>();
             if constexpr (dir) {
                 initializeLabels<dir, if_symmetry, true, true, true>();
             } else {
@@ -65,6 +66,7 @@ namespace RouteOpt::Application::CVRP {
                         auto &ki = label_array[vec_index];
                         if (ki->is_extended) continue;
                         checkIfDominated<dir, pricing_level>(ki, i, b, if_suc);
+                        if constexpr (LABEL_LOG) logLabelPopped<dir>(ki, i, b, if_suc);
                         ki->is_extended = true;
                         if (!if_suc)continue;
                         auto sig = extendKernel4Exact<int,

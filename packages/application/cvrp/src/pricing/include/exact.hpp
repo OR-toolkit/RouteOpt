@@ -17,10 +17,12 @@ namespace RouteOpt::Application::CVRP {
     template<bool if_symmetry>
     int CVRP_Pricing::generateColumnsByExact(double time_limit) {
         int ccnt = 0;
+        if constexpr (LABEL_LOG) beginLabelLogCall(PRICING_LEVEL::EXACT);
     RE_TRY:
         runLabeling<true, false, false, if_symmetry, PRICING_LEVEL::EXACT>(time_limit);
 
         if (if_short_memory) {
+            if constexpr (LABEL_LOG) abortLabelLogAttempt();
             reallocateLabel();
             initializeLabels<if_symmetry>();
             goto RE_TRY;
@@ -34,6 +36,7 @@ namespace RouteOpt::Application::CVRP {
             runLabeling<false, false, false, if_symmetry, PRICING_LEVEL::EXACT>(time_limit);
 
             if (if_short_memory) {
+                if constexpr (LABEL_LOG) abortLabelLogAttempt();
                 reallocateLabel();
                 initializeLabels<if_symmetry>();
                 goto RE_TRY2;
@@ -47,6 +50,7 @@ namespace RouteOpt::Application::CVRP {
         updateDominanceStatics<if_symmetry>();
 
     QUIT:
+        if constexpr (LABEL_LOG) endLabelLogCall(if_exact_labeling_finished);
         if_exact_cg_finished = if_exact_labeling_finished;
         return ccnt;
     }

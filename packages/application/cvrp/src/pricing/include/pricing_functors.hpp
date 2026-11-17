@@ -131,6 +131,7 @@ namespace RouteOpt::Application::CVRP {
                 rank1_rc_controller_ref.get().updateR1CStates(new_label.rc, new_label.r1c, all_label->r1c, 0, i);
                 auto bin = static_cast<int>(new_label.res.resources[0] / step_size);
                 auto &bucket = label_array_in_forward_sense[i][bin];
+                if constexpr (LABEL_LOG) logInitialLabel<dir>(i, i, bin);
                 bucket.push_front(all_label + i);
                 auto &bucket2 = if_exist_extra_labels_in_forward_sense[i][bin];
                 bucket2.first[bucket2.second++] = all_label + i;
@@ -153,6 +154,7 @@ namespace RouteOpt::Application::CVRP {
                 rank1_rc_controller_ref.get().updateR1CStates(new_label.rc, new_label.r1c, all_label->r1c, 0, point);
                 auto bin = static_cast<int>(new_label.res.resources[0] / step_size);
                 auto &bucket = label_array_in_backward_sense[point][bin];
+                if constexpr (LABEL_LOG) logInitialLabel<dir>(i, point, bin);
                 bucket.push_front(all_label + i);
                 auto &bucket2 = if_exist_extra_labels_in_backward_sense[point][bin];
                 bucket2.first[bucket2.second++] = all_label + i;
@@ -333,6 +335,11 @@ namespace RouteOpt::Application::CVRP {
                 if_suc, partners);
 
             if (!if_suc) continue;
+
+            if constexpr (LABEL_LOG) {
+                logLabelCreated<dir>(ki, j, bj,
+                                     std::is_same_v<T, int> ? LabelArcKind::BUCKET_ARC : LabelArcKind::JUMP_ARC);
+            }
 
             doDominance<dir, pricing_level>(ki, j, bj, if_suc);
 

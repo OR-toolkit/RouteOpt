@@ -22,6 +22,7 @@ namespace RouteOpt::Application::CVRP {
             THROW_RUNTIME_ERROR("Pricing level does not match");
         }
 
+        if constexpr (LABEL_LOG) beginLabelLogCall(pricing_level);
         if_exact_cg_finished = false;
         runLabeling<true, false, false, if_symmetry, pricing_level>(std::numeric_limits<float>::max());
         if (if_short_memory) {
@@ -37,6 +38,7 @@ namespace RouteOpt::Application::CVRP {
         }
 
         int ccnt = concatenateCols_prior_forward<if_symmetry>();
+        if constexpr (LABEL_LOG) endLabelLogCall(true);
 
         return ccnt;
     }

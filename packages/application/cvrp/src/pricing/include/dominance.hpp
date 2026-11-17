@@ -71,6 +71,7 @@ namespace RouteOpt::Application::CVRP {
                 if (dominanceCore<dir, pricing_level>(kj, new_label)) {
                 HERE1:
                     labelList_j.splice(labelList_j.begin(), labelList_j, it);
+                    if constexpr (LABEL_LOG) logLabelRejected<dir>(kj);
                     if constexpr (CHECK_PRICING_LABELS) {
                         inner_bin_len.first += len;
                         inner_bin_len.second++;
@@ -81,6 +82,7 @@ namespace RouteOpt::Application::CVRP {
             } else if (kj->rc > tmp_rc_sub) {
                 if (dominanceCore<dir, pricing_level>(new_label, kj)) {
                 HERE2:
+                    if constexpr (LABEL_LOG) logLabelRemoved<dir>(kj, j, bj);
                     kj->is_extended = true;
                     it = labelList_j.erase(it);
                     break;
@@ -101,12 +103,14 @@ namespace RouteOpt::Application::CVRP {
                 continue;
             }
             if (dominanceCore<dir, pricing_level>(new_label, kj)) {
+                if constexpr (LABEL_LOG) logLabelRemoved<dir>(kj, j, bj);
                 kj->is_extended = true;
                 it = labelList_j.erase(it);
             } else ++it;
         }
 
         labelList_j.push_front(new_label);
+        if constexpr (LABEL_LOG) logLabelInserted<dir>(j, bj);
 
         new_label->p_label = ki;
         new_label->is_extended = false;
@@ -141,6 +145,7 @@ namespace RouteOpt::Application::CVRP {
                 if (p->rc > tmp_ki_rc_sub) break;
                 if (dominanceCore<dir, pricing_level>(p, ki)) {
                     if_suc = false;
+                    if constexpr (LABEL_LOG) label_pop_dominator = p;
                     if constexpr (CHECK_PRICING_LABELS) {
                         outer_bin_len.first += len;
                         outer_bin_len.second++;

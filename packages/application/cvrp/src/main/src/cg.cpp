@@ -309,6 +309,7 @@ namespace RouteOpt::Application::CVRP {
 
         constexpr bool if_symmetry = !if_symmetry_prohibit(app_type);
         pricing_controller.initializeOnceB4WholePricing();
+        if constexpr (LABEL_LOG) pricing_controller.refLabelLogger().beginColumnGeneration(node->getIdx());
 
         bool if_incumbent_update = false;
 
@@ -373,6 +374,7 @@ namespace RouteOpt::Application::CVRP {
                                                 pi4_labeling);
 
             ++iter;
+            if constexpr (LABEL_LOG) pricing_controller.refLabelLogger().setIteration(iter);
 
             if (if_stabilization) {
                 StabilizationDetail::adjustStabilizationAndRebuildLP(pricing_controller, node, X, if_incumbent_update);

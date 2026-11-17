@@ -39,6 +39,11 @@ namespace RouteOpt::Application::CVRP {
 
 
     constexpr bool CHECK_PRICING_LABELS = false;
+#ifdef ROUTEOPT_LABEL_LOG
+    constexpr bool LABEL_LOG = true;
+#else
+    constexpr bool LABEL_LOG = false;
+#endif
     constexpr bool INSPECT_COLUMN_FEASIBILITY = false;
     constexpr double MeetPointFactor{0.2};
     constexpr double MeetPointFactorDecayFactor{2.};

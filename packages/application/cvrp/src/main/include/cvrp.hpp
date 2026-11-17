@@ -92,6 +92,7 @@ namespace RouteOpt::Application::CVRP {
                                                                  ml_type == ML_TYPE::ML_GET_DATA_1 || ml_type ==
                                                                  ML_TYPE::ML_GET_DATA_2) {
             std::cout << "instance name= " << ins_name << std::endl;
+            if constexpr (LABEL_LOG) pricing_controller.configureLabelLog(ins_name, f_name, argc, argv);
         }
 
         void callCutting(BbNode *node);

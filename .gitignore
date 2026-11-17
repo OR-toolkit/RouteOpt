@@ -8,10 +8,12 @@
 # Local experiment outputs
 /runs/
 /logs/runs/
+/output/
 
 # CVRP build outputs
 /packages/application/cvrp/bin/
 /packages/application/cvrp/build/
+/packages/application/cvrp/build_label_log/
 /packages/application/cvrp/lib/hgs/build/
 /packages/application/cvrp/lib/hgs/lib/
 
